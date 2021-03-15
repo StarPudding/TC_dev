@@ -1,0 +1,95 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html style="overflow-x:auto;overflow-y:auto;">
+<head>
+	<title>临时跳转用页面 - Powered ZTDS</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><meta name="author" content="http://jeesite.com/"/>
+<meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10" />
+<meta http-equiv="Expires" content="0"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="Cache-Control" content="no-store">
+<!-- [扩展JS] 
+<script type="text/javascript" src="/static/extJs.js" charset="utf-8"></script>-->
+
+<script src="/static/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<!-- [EasyUI]
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/gray/easyui.css" /> -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="/static/easyui/EasyUI/easyui.css" />
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+
+
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/bootstrap.js" type="text/javascript"></script>
+<link href="/static/bootstrap/2.3.1/awesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<!--[if lte IE 7]><link href="/static/bootstrap/2.3.1/awesome/font-awesome-ie7.min.css" type="text/css" rel="stylesheet" /><![endif]-->
+<!--[if lte IE 6]><link href="/static/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<link href="/static/jquery-select2/3.4/select2.css" rel="stylesheet" />
+<script src="/static/jquery-select2/3.4/select2.min.js" type="text/javascript"></script>
+<script src="/static/jquery-select2/3.4/linkage.js" type="text/javascript"></script>
+<link href="/static/jquery-validation/1.11.0/jquery.validate.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/jquery-validation/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/static/jquery-validation/1.11.0/additional-methods.js" type="text/javascript"></script>
+<link href="/static/jquery-jbox/2.3/Skins/Bootstrap/jbox.min.css" rel="stylesheet" />
+<script src="/static/jquery-jbox/2.3/jquery.jBox-2.3.min.js" type="text/javascript"></script>
+<script src="/static/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+<script src="/static/common/mustache.min.js" type="text/javascript"></script>
+<link href="/static/common/zmd.css" type="text/css" rel="stylesheet" />
+<script src="/static/common/zmd.min.js" type="text/javascript"></script>
+<script type="text/javascript">var ctx = '/a', ctxStatic='/static',ctxDownload = '/download',upload_completed=0,
+tabmode = 1;
+</script>
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/fixed_table_rc.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/fixed_table_rc.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/ganged.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/hrefTab.js" type="text/javascript"></script>
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<script src="/static/moduleCommon/setPageNum.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/trHighLight.js" type="text/javascript"></script>
+		
+	
+	
+	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	
+		
+			top.$.fn.tabJumpJump('入库登记','入库管理',true,'tab=2');
+		
+		
+	
+	});
+	</script>
+
+</head>
+<body>
+	
+
+	<script type="text/javascript">//<!-- 无框架时，左上角显示菜单图标按钮。
+		if(!(self.frameElement && self.frameElement.tagName=="IFRAME")){
+			$("body").prepend("<i id=\"btnMenu\" class=\"icon-th-list\" style=\"cursor:pointer;float:right;margin:10px;\"></i><div id=\"menuContent\"></div>");
+			$("#btnMenu").click(function(){
+				top.$.jBox('get:/a/sys/menu/treeselect;JSESSIONID=92189d2586a34a2697ba9bffc58fbb0b', {title:'选择菜单', buttons:{'关闭':true}, width:300, height: 350, top:10});
+				//if ($("#menuContent").html()==""){$.get("/a/sys/menu/treeselect", function(data){$("#menuContent").html(data);});}else{$("#menuContent").toggle(100);}
+			});
+		}//-->
+	</script>
+</body>
+</html>

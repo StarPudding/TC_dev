@@ -1,0 +1,361 @@
+{
+  "login":{
+    "userName": "唐顺意",
+    "password": "Tsy@123456",
+    "pushClientId": "null",
+    "deviceId": "",
+    "deviceType": "app",
+    "phoneType": "EVR-AL00",
+    "loginFrom": "Android",
+    "appVersion": "1.1.6"
+  },
+  "monitor-login": {
+    "username":	"dsadmin",
+    "password":	"aff8c7c4f8d9fab3bb7322ea79cc5170",
+    "mac": "02:00:00:00:00:00",
+    "loginAddr": "115.238.88.202",
+    "passwordLevel": "2",
+    "captchaKey": "",
+    "captcha": ""
+  },
+  "xnwl-001": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "9086aae177164c4eb82e96a08c980a99"
+  },
+  "xnwl-002": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode":	"5f5e88a9a7e4421fa6b8b1a2b1bfe687"
+  },
+  "xnwl-003": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "28bb99fe06194507af71e8a686f453db"
+  },
+  "xnwl-004": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "d9f0a69b4709445c96581655c317100a"
+  },
+  "xnwl-005": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b9dbc384d5984f29b07f868ddbecee3e"
+  },
+  "xnwl-006": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "1e2e78cb4ecc4a74a40300815a6be3eb"
+  },
+  "xnwl-007": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "e7d204fa89b942b29f40c9d0f3e89b1f"
+  },
+  "xnwl-008": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "94ebb0e50607433496cfdb56852c7312"
+  },
+  "xnwl-009": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "48213a91fb1347c69b82266559823be8"
+  },
+  "xnwl-010": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "8723a9624f7345e3920654a38a438eb4"
+  },
+  "xnwl-011": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "cee520bc7d9d4aa085e4bca397ce6189"
+  },
+  "xnwl-012": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "d62377e240064b008dd7ba5ad27f6728"
+  },
+  "xnwl-013": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "2bd542ae3a35401c893fb306214c84c1"
+  },
+  "nbbl-001": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "445400bc8cad4262865e1d86926e15d3"
+  },
+  "nbbl-002": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "32afac4df2ea49a7a1ef21de199a42b2"
+  },
+  "nbbl-003": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "0c1e03e25d2a4369b99aa6579a5856d8"
+  },
+  "nbbl-004": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "871652c217774745b8f53f8d66f5c88c"
+  },
+  "nbbl-005": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "5667e3556d3c440d8f4788925d12443d"
+  },
+  "nbbl-006": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "6153d3cd1cf54b91a04d22fea2cac1aa"
+  },
+  "nbbl-007": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "75361246867744cc8b9ea6e9a9b252e1"
+  },
+  "nbbl-008": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "5f72be566b164e49812a6348a8121395"
+  },
+  "jnzh-001": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "8345220e9a684888be38efb7f1f84735"
+  },
+  "jnzh-002": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "8e6f152b195b4b7599c6a350d85fd73b"
+  },
+  "jnzh-003": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "0d894207d4be4601a2848a3b7d919dcf"
+  },
+  "jnzh-004": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "a76e8917c5b7469aaee21db6ac2c0a8b"
+  },
+  "jnzh-005": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "d593b1b50bcb410181cbd5b2e64c5963"
+  },
+  "jnzh-006": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "ddf14564a65847cfa6dc8a6ddf2a6a3c"
+  },
+  "jnzh-007": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "4e77e63076fa4c4490600039ea0b5d8a"
+  },
+  "jnzh-008": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b4c31a99192a45b1a033586df6c24604"
+  },
+  "jnzh-009": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "2f45646c128c40a09ef4c1d502d96d44"
+  },
+  "jnzh-010": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "4636786048de477d8ab36fb5e2f5b745"
+  },
+  "jnzh-011": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "6bdb9359ec1649128b556be41c321723"
+  },
+  "jnzh-012": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "135655a0b35e4177bf7b13ba9b48dd48"
+  },
+  "jnzh-013": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b23621d7513d4fa5863acc0ea65515c6"
+  },
+  "jnzh-014": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "ce8975bef15c4a73b32c10beb542d8e0"
+  },
+  "jnzh-015": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b388cc508c274bb9897b94ac2fb1e21f"
+  },
+  "jnzh-016": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "7abe5d56dcb145eb90b4355cc136ee62"
+  },
+  "jnzh-017": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "e3718bb2a8f848d2b064c70cd026a4c8"
+  },
+  "jnzh-018": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "6a1b6c2bb2f14f0282b36227dfc10ef1"
+  },
+  "jnzh-019": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "2d872d15729d42619732981cc343c41a"
+  },
+  "jnzh-020": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "fdf0614150a344c280b242ff8e06dc1f"
+  },
+  "jnzh-021": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "a4b8f74137bf4d64bcba5d509d450691"
+  },
+  "jnzh-022": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "d70728561f6b4cbcadeb0719ad84a28c"
+  },
+  "jnzh-023": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "e9ff7f6e479d48e68ef78e324dd5f2cb"
+  },
+  "jnzh-024": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "7a5f38886cae4c0da4b08bdf546be06d"
+  },
+  "jnzh-025": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "8f4e744a61214551acf4bc448e57d21e"
+  },
+  "jnzh-026": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "be9a5d1c284c42869bb4fa86467d97bb"
+  },
+  "jnzh-027": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "cfbf226d409742cfaf3237a563b615f3"
+  },
+  "jnzh-028": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "548b54760549489b90b5dca6dd937a4a"
+  },
+  "jnzh-029": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "425efcbe8c10469f84dff15f732e0e3e"
+  },
+  "jnzh-030": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b43ecb3306df4b849702f4b54156ebe4"
+  },
+  "jnzh-031": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "5291d310c4de449d977a219f5f397794"
+  },
+  "jnzh-032": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "c242786e8f0d4805961829b4ae2790e2"
+  },
+  "jnzh-033": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b8c5310a817f49f992f72fe79f72f6f5"
+  },
+  "jnzh-034": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "6407f6e295d746ed8ee13564a0354cfc"
+  },
+  "jnzh-035": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "5c5deda8592d4cae9dd52e5ca8f4a509"
+  },
+  "jnzh-036": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "ce31a9c1c6ad4fed9194bb427c89a0b1"
+  },
+  "jnzh-037": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "ef8336d8aab04d83a03596258aa9ddc9"
+  },
+  "jnzh-038": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "1b8072565da74f44b98f9cc1c7ba0ff3"
+  },
+  "jnzh-039": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "4d10d441d6094e8a9ce993d35a3d873b"
+  },
+  "jnzh-040": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "d439aab8eab3419d8de9773d9e995124"
+  },
+  "jnzh-041": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "c5a1cfd1764340d8944eca2ff8e9847a"
+  },
+  "jnzh-042": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "ee4c35b43271408894677b6c3c4b6b47"
+  },
+  "jnzh-043": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "f9de568bff7140e4a2c2c33f2b4f536f"
+  },
+  "jnzh-044": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "b0d35d393e7d4b609ac92ee2540bad36"
+  },
+  "jnzh-045": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "3e7f9173820a49cf83cecdb48cdde5ef"
+  },
+  "jnzh-046": {
+    "sessionID": "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode": "28ecd969b3c0423ea83f7c8e9e25c782"
+  },
+  "zzxc-001": {
+    "sessionID":  "01D9A743AF3DDF5D7CBD7B36CC2405E8",
+    "cameraID": "",
+    "sysCode":	"2046305e3ec949ec88381a0968b468c6"
+  }
+}

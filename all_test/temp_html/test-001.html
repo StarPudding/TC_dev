@@ -1,0 +1,1739 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html style="overflow-x:auto;overflow-y:auto;">
+<head>
+	<title>WMS系统</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><meta name="author" content="http://jeesite.com/"/>
+<meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10" />
+<meta http-equiv="Expires" content="0"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="Cache-Control" content="no-store">
+<!-- [扩展JS] 
+<script type="text/javascript" src="/static/extJs.js" charset="utf-8"></script>-->
+
+<script src="/static/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<!-- [EasyUI]
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/gray/easyui.css" /> -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="/static/easyui/EasyUI/easyui.css" />
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+
+
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/bootstrap.js" type="text/javascript"></script>
+<link href="/static/bootstrap/2.3.1/awesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<!--[if lte IE 7]><link href="/static/bootstrap/2.3.1/awesome/font-awesome-ie7.min.css" type="text/css" rel="stylesheet" /><![endif]-->
+<!--[if lte IE 6]><link href="/static/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<link href="/static/jquery-select2/3.4/select2.css" rel="stylesheet" />
+<script src="/static/jquery-select2/3.4/select2.min.js" type="text/javascript"></script>
+<script src="/static/jquery-select2/3.4/linkage.js" type="text/javascript"></script>
+<link href="/static/jquery-validation/1.11.0/jquery.validate.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/jquery-validation/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/static/jquery-validation/1.11.0/additional-methods.js" type="text/javascript"></script>
+<link href="/static/jquery-jbox/2.3/Skins/Bootstrap/jbox.min.css" rel="stylesheet" />
+<script src="/static/jquery-jbox/2.3/jquery.jBox-2.3.min.js" type="text/javascript"></script>
+<script src="/static/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+<script src="/static/common/mustache.min.js" type="text/javascript"></script>
+<link href="/static/common/zmd.css" type="text/css" rel="stylesheet" />
+<script src="/static/common/zmd.min.js" type="text/javascript"></script>
+<script type="text/javascript">var ctx = '/a', ctxStatic='/static',ctxDownload = '/download',upload_completed=0,
+tabmode = 1;
+</script>
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/fixed_table_rc.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/fixed_table_rc.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/ganged.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/hrefTab.js" type="text/javascript"></script>
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<script src="/static/moduleCommon/setPageNum.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/trHighLight.js" type="text/javascript"></script>
+
+	
+	
+	<meta name="decorator" content="blank"/>
+    <link rel="Stylesheet" href="/static/jerichotab/css/jquery.jerichotab.css" />
+    <script type="text/javascript" src="/static/jerichotab/js/jquery.jerichotab.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			if(''){
+				alertx("<font color='red'>您的密码马上就要到期，请尽快修改密码，谢谢！</font>");
+			}
+			
+			//  初始化页签
+			$.fn.initJerichoTab({
+                renderTo: '#right', uniqueId: 'jerichotab',
+                contentCss: { 'height': $('#right').height() - tabTitleHeight },
+                tabs: [], loadOnce: true, tabWidth: 110, titleHeight: tabTitleHeight
+            });//
+            if(typeof(isJumpJump) == "undefined")isJumpJump=false;
+			// 绑定菜单单击事件
+			$("#menu a.menu").click(function(){
+				// 一级菜单焦点
+				$("#menu li.menu").removeClass("active");
+				$(this).parent().addClass("active");
+				// 左侧区域隐藏
+				if ($(this).attr("target") == "mainFrame"){
+					$("#left,#openClose").hide();
+					wSizeWidth();
+					//  隐藏页签
+					$(".jericho_tab").hide();
+					$("#mainFrame").show();//
+					return true;
+				}
+				// 左侧区域显示
+				$("#left,#openClose").show();
+				if(!$("#openClose").hasClass("close")){
+					$("#openClose").click();
+				}
+				// 显示二级菜单
+				var menuId = "#menu-" + $(this).attr("data-id");
+				if ($(menuId).length > 0){
+					$("#left .accordion").hide();
+					$(menuId).show();
+					if(!isJumpJump){
+					// 初始化点击第一个二级菜单
+					if (!$(menuId + " .accordion-body:first").hasClass('in')){
+						$(menuId + " .accordion-heading:first a").click();
+					}
+					if (!$(menuId + " .accordion-body li:first ul:first").is(":visible")){
+						$(menuId + " .accordion-body a:first i").click();
+					}
+					// 初始化点击第一个三级菜单
+					$(menuId + " .accordion-body li:first li:first a:first i").click();
+					}
+				}else{
+					// 获取二级菜单数据
+					$.get($(this).attr("data-href"), function(data){
+						if (data.indexOf("id=\"loginForm\"") != -1){
+							alert('未登录或登录超时。请重新登录，谢谢！');
+							top.location = "/a";
+							return false;
+						}
+						$("#left .accordion").hide();
+						$("#left").append(data);
+						// 链接去掉虚框
+						$(menuId + " a").bind("focus",function() {
+							if(this.blur) {this.blur()};
+						});
+						// 二级标题
+						$(menuId + " .accordion-heading a").click(function(){
+							$(menuId + " .accordion-toggle i").removeClass('icon-chevron-down').addClass('icon-chevron-right');
+							if(!$($(this).attr('data-href')).hasClass('in')){
+								$(this).children("i").removeClass('icon-chevron-right').addClass('icon-chevron-down');
+							}
+						});
+						// 二级内容
+						$(menuId + " .accordion-body a").click(function(){
+							$(menuId + " li").removeClass("active");
+							$(menuId + " li i").removeClass("icon-white");
+							$(this).parent().addClass("active");
+							$(this).children("i").addClass("icon-white");
+						});
+						// 展现三级
+						$(menuId + " .accordion-inner a").click(function(){
+							var href = $(this).attr("data-href");
+							if($(href).length > 0){
+								$(href).toggle().parent().toggle();
+								return false;
+							}
+							//  打开显示页签
+							return addTab($(this)); // 
+						});
+						if(!isJumpJump){
+						// 默认选中第一个菜单
+						$(menuId + " .accordion-body a:first i").click();
+						$(menuId + " .accordion-body li:first li:first a:first i").click();
+						}
+					});
+				}
+				// 大小宽度调整
+				wSizeWidth();
+				return false;
+			});
+			// 初始化点击第一个一级菜单
+			$("#menu a.menu:first span").click();
+			//  下拉菜单以选项卡方式打开
+			$("#userInfo .dropdown-menu a").mouseup(function(){
+				return addTab($(this), true);
+			});// 
+			// 鼠标移动到边界自动弹出左侧菜单
+			$("#openClose").mouseover(function(){
+				if($(this).hasClass("open")){
+					$(this).click();
+				}
+			});
+			/* // 获取通知数目  
+			function getNotifyNum(){
+				$.get("/a/oa/oaNotify/self/count?updateSession=0&t="+new Date().getTime(),function(data){
+					var num = parseFloat(data);
+					if (num > 0){
+						$("#notifyNum,#notifyNum2").show().html("("+num+")");
+					}else{
+						$("#notifyNum,#notifyNum2").hide()
+					}
+				});
+			}
+			getNotifyNum(); //
+			setInterval(getNotifyNum, 60000); // */
+		});
+		//  添加一个页签
+		function addTab($this, refresh){
+			$(".jericho_tab").show();
+			$("#mainFrame").hide();
+			$.fn.jerichoTab.addTab({
+                tabFirer: $this,
+                title: $this.text(),
+                closeable: true,
+                data: {
+                    dataType: 'iframe',
+                    dataLink: $this.attr('href')
+                }
+            }).loadData(refresh);
+			return false;
+		}// 
+		
+		function showMenu(param){
+			var dataLink = $(param).attr('dataLink');
+			$.post("/a/sys/menu/findMenuIdByHref", {'href':dataLink}, function(response) {
+				if(null != response){
+					onClickMenu(response.pId,response.id);
+				}
+			},'json');
+		}
+		
+		function onClickMenu(pId,id){
+			// 显示二级菜单
+			var menuId = "#menu-" + pId;
+			$("#left .accordion").hide();
+			$(menuId).show();
+			$(menuId + " li").removeClass("active");
+			$("#menu3-"+id).removeClass("li").addClass("active");
+		}
+		
+		function sleep(numberMillis) {
+		    var now = new Date();
+		    var exitTime = now.getTime() + numberMillis;
+		    while (true) {
+		        now = new Date();
+		        if (now.getTime() > exitTime)
+		            return;
+		    }
+		    return true;
+		}
+		
+		function browser(){  
+            var is360 = false;  
+            var isIE = false;  
+            if (window.navigator.appName.indexOf("Microsoft") != -1){  
+                isIE= true;  
+            }  
+            if(isIE&&(window.navigator.userProfile+'')=='null'){  
+                is360 = true;  
+            }  
+            if(is360){  
+                return true;  
+            }else{
+            	return false;
+            }
+        }
+	</script>
+
+</head>
+<body>
+	
+	<div id="main">
+	<div class="top">
+	    <!-- 头部开始 -->
+		<div id="header" class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="brand"><a herf="#"><img src="/static/bootstrap/bsie/img/wms_logo.png"/></a></div><!-- logo --><!--  <span id="productName">WMS系统</span>-->
+				<ul id="userControl" class="nav pull-right">
+					
+					<li id="themeSwitch" class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="主题切换"><i class="icon-th-large"></i></a>
+						<ul class="dropdown-menu">
+							
+							<li><a href="javascript:cookie('tabmode','0');location=location.href">关闭页签模式</a></li>
+						</ul>
+						<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->
+					</li>
+					<li id="userInfo" class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息">您好, 自动化测试&nbsp;<span id="notifyNum" class="label label-info hide"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/a/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a></li>
+							<li><a href="/a/sys/user/modifyPwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
+						</ul>
+					</li>
+					<li><a href="/a/logout" title="退出登录">退出</a></li>
+				</ul>
+				
+			</div>
+	    </div>
+	    <!-- 头部结束 -->
+	    
+	    <!-- 导航开始 -->
+	    <div class="nav-collapse">
+					<ul id="menu" class="nav" style="*white-space:nowrap;float:none;">
+						
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu  active">
+									
+									
+										<a class="menu" href="/a/report/workbench" data-id="5821" target="mainFrame"><span>个人工作台</span></a>
+									
+								</li>
+								
+									
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=5161" data-id="5161"><span>入库管理</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=5162" data-id="5162"><span>库内管理</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=5163" data-id="5163"><span>出库管理</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=6521" data-id="6521"><span>加工管理</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=6350" data-id="6350"><span>结算中心</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=6701" data-id="6701"><span>视频监控</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=5164" data-id="5164"><span>统计分析</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=2" data-id="2"><span>系统设置</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+								<li class="menu ">
+									
+										<a class="menu" href="javascript:" data-href="/a/sys/menu/tree?parentId=6981" data-id="6981"><span>金融中心</span></a>
+									
+									
+								</li>
+								
+								
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+							
+						
+					</ul>
+				</div><!--/.nav-collapse -->
+				<!-- 导航结束 -->
+		</div>			
+				
+				
+	    <div class="container-fluid">
+			<div id="content" class="row-fluid">
+				<div id="left">
+				</div>
+				<div id="openClose" class="close">&nbsp;</div>
+				<div id="right">
+					<iframe id="mainFrame" name="mainFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe>
+				</div>
+			</div>
+		    <div id="footer" class="row-fluid">
+	            Copyright &copy; 2016-2019 WMS系统 - Powered By <a href="#" target="_blank">ZMD906</a> V1.0.0
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript"> 
+		var leftWidth = 160; // 左侧窗口大小
+		var tabTitleHeight = 33; // 页签的高度
+		var htmlObj = $("html"), mainObj = $("#main");
+		var headerObj = $("#header"), footerObj = $("#footer");
+		var frameObj = $("#left, #openClose, #right, #right iframe");
+		function wSize(){
+			var minHeight = 500, minWidth = 980;
+			var strs = getWindowSize().toString().split(",");
+			htmlObj.css({"overflow-x":strs[1] < minWidth ? "auto" : "hidden", "overflow-y":strs[0] < minHeight ? "auto" : "hidden"});
+			mainObj.css("width",strs[1] < minWidth ? minWidth - 10 : "auto");
+			frameObj.height((strs[0] < minHeight ? minHeight : strs[0]) - headerObj.height() - footerObj.height() - (strs[1] < minWidth ? 42 : 28));
+			$("#openClose").height($("#openClose").height() - 5);//  
+			$(".jericho_tab iframe").height($("#right").height() - tabTitleHeight); // 
+			wSizeWidth();
+		}
+		function wSizeWidth(){
+			if (!$("#openClose").is(":hidden")){
+				var leftWidth = ($("#left").width() < 0 ? 0 : $("#left").width());
+				$("#right").width($("#content").width()- leftWidth - $("#openClose").width() -5);
+			}else{
+				if(browser()){
+					if(sleep(1)){
+						$("#right").width("100%");
+					}
+				}else{
+					$("#right").width("100%");
+				}
+			}
+		}//  
+		
+		function openCloseClickCallBack(b){
+			$.fn.jerichoTab.resize();
+		} // 
+	</script>
+	<script src="/static/common/wsize.min.js" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,1451 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html style="overflow-x:auto;overflow-y:auto;">
+<head>
+	<title>入库单列表 - Powered ZTDS</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><meta name="author" content="http://jeesite.com/"/>
+<meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10" />
+<meta http-equiv="Expires" content="0"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="Cache-Control" content="no-store">
+<!-- [扩展JS] 
+<script type="text/javascript" src="/static/extJs.js" charset="utf-8"></script>-->
+
+<script src="/static/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<!-- [EasyUI]
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/gray/easyui.css" /> -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="/static/easyui/EasyUI/easyui.css" />
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+
+
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/bootstrap.js" type="text/javascript"></script>
+<link href="/static/bootstrap/2.3.1/awesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<!--[if lte IE 7]><link href="/static/bootstrap/2.3.1/awesome/font-awesome-ie7.min.css" type="text/css" rel="stylesheet" /><![endif]-->
+<!--[if lte IE 6]><link href="/static/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<link href="/static/jquery-select2/3.4/select2.css" rel="stylesheet" />
+<script src="/static/jquery-select2/3.4/select2.min.js" type="text/javascript"></script>
+<script src="/static/jquery-select2/3.4/linkage.js" type="text/javascript"></script>
+<link href="/static/jquery-validation/1.11.0/jquery.validate.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/jquery-validation/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/static/jquery-validation/1.11.0/additional-methods.js" type="text/javascript"></script>
+<link href="/static/jquery-jbox/2.3/Skins/Bootstrap/jbox.min.css" rel="stylesheet" />
+<script src="/static/jquery-jbox/2.3/jquery.jBox-2.3.min.js" type="text/javascript"></script>
+<script src="/static/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+<script src="/static/common/mustache.min.js" type="text/javascript"></script>
+<link href="/static/common/zmd.css" type="text/css" rel="stylesheet" />
+<script src="/static/common/zmd.min.js" type="text/javascript"></script>
+<script type="text/javascript">var ctx = '/a', ctxStatic='/static',ctxDownload = '/download',upload_completed=0,
+tabmode = 1;
+</script>
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/fixed_table_rc.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/fixed_table_rc.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/ganged.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/hrefTab.js" type="text/javascript"></script>
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<script src="/static/moduleCommon/setPageNum.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/trHighLight.js" type="text/javascript"></script>
+		
+	
+	
+	<meta name="decorator" content="default"/>
+	<script src="/static/moduleCommon/LodopFuncs.js" type="text/javascript"></script>
+	<object id="LODOP_OB" width="0" height="0" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" style="position: absolute;">
+		<embed id="LODOP_EM" width="0" height="0" pluginspage="/download/install_lodop32.exe" type="application/x-print-lodop">
+	</object>
+	<script type="text/javascript">
+	    //改单
+		function updateEnter(){
+			var $checkedArray = $('[name=selectionIvtId]:checkbox').filter(':checked');
+			var checkedCount = $checkedArray.length;
+			if (checkedCount < 1 || checkedCount > 1) {
+				alertx('请选择一条单据进行改单！');
+				return;
+			}
+			//本次选择的id
+			var id = "";
+			$.each($checkedArray,function(){
+				id += $(this).val();
+			});
+
+			$.get("/a/enter/proEnter/checkEnterChange?id="+id,function(data){
+				if(data == "0"){
+					changeEnterWindow(id);
+				}else if(data == "1") {
+					$.jBox.error('该入库单状态为已作废，无法执行修改操作!', '警告信息');
+				}else if(data == "2") {
+					changeEnterWindow(id);
+					/* $.jBox.error('该入库单物料已使用，无法执行修改操作!', '警告信息'); */
+				}else if(data == "3") {
+					$.jBox.error('未知!', '提示信息');
+				}else if(data == "4") {
+					$.jBox.error('该入库单已结算，无法执行修改操作!', '警告信息');
+				}
+			}); 
+		}
+	    
+		function changeEnterWindow(id) {
+			//  多页签模式
+			top.$.fn.jerichoTab.addTab({
+				title:"修改入库单",
+				closeable:true,
+				data: {
+					dataType: 'iframe',
+					dataLink: "/a/enter/proEnter/form?id="+ id
+				}
+			}).loadData(true);
+			//
+			// 
+		}
+		
+		//作废入库单
+		function cancelEnter(){
+			var $checkedArray = $('[name=selectionIvtId]:checkbox').filter(':checked');
+			var checkedCount = $checkedArray.length;
+			if (checkedCount < 1 || checkedCount > 1) {
+				alertx('请选择一条单据进行作废！');
+				return;
+			}
+			//本次选择的id
+			var id = "";
+			$.each($checkedArray,function(){
+				id += $(this).val();
+			});
+			
+			$.get("/a/enter/proEnter/checkEnterChange?id="+id,function(data){
+				if(data == "0"){
+				//  多页签模式
+					top.$.fn.jerichoTab.addTab({
+						title:"入库单详情",
+						closeable:true,
+						data: {
+							dataType: 'iframe',
+							dataLink: "/a/enter/proEnter/detail?id="+ id
+						}
+					}).loadData(true);
+				//
+				// 
+				}else if(data == "1") {
+					$.jBox.error('该入库单状态为已作废，无法执行作废操作!', '警告信息');
+				}else if(data == "2") {
+					$.jBox.error('该入库单物料已使用，无法执行作废操作!', '警告信息');
+				}else if(data == "3") {
+					$.jBox.error('未知!', '提示信息');
+				}else if(data == "4") {
+					$.jBox.error('该入库单已结算，无法执行作废操作!', '警告信息');
+				}
+			}); 
+		}
+		
+		function resetForm(){
+			$("#ownerId").val('');
+			$("#ownerId").select2('data','');
+			//$("#warehouseId").val("").trigger("change");
+			$("#warehouseId").val('');
+			$("#warehouseId").select2('data','');
+			$("#enterCode").val("");
+			$("#enterStart").val("");
+			$("#enterEnd").val("");
+			$("#contractCode").val("");
+		}
+		
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			$("#searchForm").attr("action","/a/enter/proEnter/list");
+			$("#searchForm").submit();
+     	return false;
+    }
+		function ladeOpen(obj){
+			var self = $(obj);
+			if (self.closest("tr").next().css("display")=="none") {			
+				self.closest("tr").next().css("display","table-row");
+				self.find("#openSpan").text("-");
+			}else{
+				self.closest("tr").next().css("display","none");
+				self.find("#openSpan").text("+");
+			}
+		}
+		function changeDate(){
+			var beginDate = $("#enterStart").val();
+			var endDate = $("#enterEnd").val();
+			if(beginDate != ""&&endDate != ""){
+				if(beginDate > endDate){
+					alert("开始日期不能大于结束日期！");
+					return false;
+				}else{
+					return true;
+				}
+			}else{
+				return true;
+			}
+		}	
+
+		 //设置横向打印
+	    function setLandscapePrinter(){
+	        LODOP.SET_SHOW_MODE('HIDE_SBUTTIN_PREVIEW','0');    //显示打印设置按钮
+	        LODOP.SET_PREVIEW_WINDOW(1,0,1,0,0,'预览查看.开始打印');
+	        LODOP.SET_PRINT_MODE ('AUTO_CLOSE_PREWINDOW',1);
+	        LODOP.PRINT_INITA(0,0,"100%","100%","打印");
+	        LODOP.SET_PRINT_PAGESIZE(2,0,0,"A4");    //设置横向打印 
+	        LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+	    };
+	    
+		function setPrinter(){
+	        LODOP.SET_SHOW_MODE('HIDE_SBUTTIN_PREVIEW','0');    //显示打印设置按钮
+	        LODOP.SET_PREVIEW_WINDOW(1,0,1,0,0,'预览查看.开始打印');
+	        LODOP.SET_PRINT_MODE ('AUTO_CLOSE_PREWINDOW',1);
+	        LODOP.PRINT_INITA(0,0,"100%","100%","打印");
+	       // LODOP.SET_PRINT_PAGESIZE(1,0,0,"A4");    //设置纵向打印 
+	       // LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+	    };
+
+		    
+		    
+		    
+		    function printt(preview,printId){
+				//本次选择的id
+				var id = "";
+		    	if (printId != "") {
+		    		id = printId;
+		    	} else {
+					var $checkedArray = $('[name=selectionIvtId]:checkbox').filter(':checked');
+					var checkedCount = $checkedArray.length;
+					if (checkedCount < 1 || checkedCount > 1) {
+						alertx('请选择一条单据进行打印！');
+						return;
+					}
+					$.each($checkedArray,function(){
+						id += $(this).val();
+					});
+		    	}
+				
+				$.get("/a/enter/proEnter/hasPdfFile?id="+id,function(data){
+					//是否存在pdf文件
+					if(data == "1"){
+						var newTab=window.open('about:blank');
+						newTab.location.href ="/a/enter/proEnter/openPdfFile?id="+id;
+					}else if(data == "0") {
+				    	LODOP = getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM')); //声明为全局变
+				    	var url = "/a/enter/proEnter/print?id="+id;
+				        $.post(url,null,function(response){
+				            $("#printDivHidden").html(response);          
+				            var flag = $("#printDivHidden").find(".printFlag").val();
+				            //原材料
+				            if(flag =="1"){
+				        		setLandscapePrinter();
+				            	LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Full-Width");
+				            	LODOP.ADD_PRINT_HTM(30,20,"100%","100%",$('#printDivHidden').html());
+				           }else{
+				        	   setPrinter();
+				            	LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Full-Width");
+					            var divCount = $("#printDivHidden").find(".rightCon").length;
+					            /* if(divCount>1){ */
+					            for(var i=0;i<divCount;i++){
+					            	LODOP.NewPage();
+					            	LODOP.ADD_PRINT_HTM(30,20,"100%","100%",$('#printDivHidden').find('div[id="printDiv_'+i+'.0"]').html());
+					            }
+					            /* }else{
+					            	LODOP.ADD_PRINT_HTM(30,20,"100%","100%",$('#printDivHidden').html());
+					            } */
+				           }
+				            if(preview){
+				            	var i = LODOP.PREVIEW();
+				            }else{
+				            	var i = LODOP.PRINT();
+				            }
+				          }); 
+					}
+				}); 
+		    }
+		    /**打印***/
+		    function doPrint(){
+				/* var arr = $("input[type='radio']:checked");
+	    		if(arr == null || arr.length == 0){
+					alertx('请选择打印一条数据');
+					return;
+				}
+				//本次选择的id
+				var id = "";
+				arr.each(function(i){
+					id+=$(this).val();
+				});
+		    	LODOP = getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM')); //声明为全局变
+		        var url = "/a/enter/proEnter/print?id="+id;
+		        $.post(url,null,function(response){
+		            $("#printDivHidden").html(response); 
+		            setPrinter();
+		            LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Full-Width");
+		            LODOP.ADD_PRINT_HTM(30,20,"100%","100%",$('#printDivHidden').html());
+		            var i = LODOP.PREVIEW();
+		          });   */
+		          printt(true,"");
+		    } 
+		    /**打印***/
+		    function doPrint2(printId){
+				/* var arr = $("input[type='radio']:checked");
+	    		if(arr == null || arr.length == 0){
+					alertx('请选择打印一条数据');
+					return;
+				}
+				//本次选择的id
+				var id = "";
+				arr.each(function(i){
+					id+=$(this).val();
+				});
+		    	LODOP = getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM')); //声明为全局变
+		        var url = "/a/enter/proEnter/print?id="+id;
+		        $.post(url,null,function(response){
+		            $("#printDivHidden").html(response); 
+		            setPrinter();
+		            LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Full-Width");
+		            LODOP.ADD_PRINT_HTM(30,20,"100%","100%",$('#printDivHidden').html());
+		            var i = LODOP.PRINT();
+		          });   */
+		    	printt(false, printId);
+		    } 
+		  window.onload = function(){
+				
+			};
+			
+		//pdf导出
+		function pdfToExport(){
+			var $checkedArray = $('[name=selectionIvtId]:checkbox').filter(':checked');
+			var checkedCount = $checkedArray.length;
+			if (checkedCount < 1) {
+				alertx('请选择要导出的入库单！');
+				return;
+			}
+
+			var warehouseIdIp = "";
+			var msgFlg = true;
+			$.each($checkedArray,function(){
+				var idx=$(this).attr("idx");
+				if (warehouseIdIp == "") {
+					warehouseIdIp = $("#warehouseIdIp_"+idx).val();
+				} 
+				if (warehouseIdIp != $("#warehouseIdIp_"+idx).val()) {
+					alertx('请选择单个仓库！');
+					msgFlg = false;
+				}
+				warehouseIdIp = $("#warehouseIdIp_"+idx).val();
+			});
+
+			if (msgFlg) {
+				var ids = "";
+				$.each($checkedArray,function(){
+					ids += $(this).val() + ",";
+				});
+				$.get("/a/enter/proEnter/hasExportPdfFile?ids="+ids,function(data){
+					if(data == ""){
+						window.location.href="/a/enter/proEnter/batchDownload?ids=" + ids;
+					} else {
+						alertx(data);
+						return;
+					}
+				}); 
+			}
+		}
+
+	</script>
+
+
+</head>
+<body>
+	   
+    <style>
+	    #lodop_install_tip {
+		    position: absolute;
+		    top: 110px;
+		    right: 200px;
+		    height:20px;
+		    z-index: 10000;
+		    border:1px solid #ff00ff;
+		    border-radius: 4px;
+		    padding: 2px 6px;
+	    }
+	    .table-striped tbody>tr>td{white-space:nowrap}
+			table tr th{text-align:right; padding-right:10px;   font-weight: normal}
+			
+    </style> 
+	<div class="bg_white_10_tn">
+	<ul class="nav nav-tabs">
+    	
+		<li ><a href="/a/enter/proReceiving/enterList">待入库处理</a></li>
+		
+		
+		<li class="active"><a href="/a/enter/proEnter/list">已入库处理</a></li>
+		
+		
+		<li ><a href="/a/enter/orderEnter/pendingList">订单待入库</a></li>
+		
+		
+		<li ><a href="/a/enter/orderEnter/finishList">订单已入库</a></li>
+		
+	</ul> 
+	<form id="searchForm" class="breadcrumb form-search" action="/a/enter/proEnter/list" method="post">
+		<input id="pageNo" name="pageNo" type="hidden" value="1"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="10"/>
+		<table class="searchui">
+		     <tr>
+		         <th>货主单位：</th>
+		         <td>
+		         	<input id="ownerId" name="ownerId" delayedSrc="/a/sys/sysCustomer/getCustomerNameJson" class="input-large delay" delayedMinInput="0" dataFunc="buildAllCustomerParams" type="text" value="3271"/>
+		         </td>
+		         <th>入库时间：</th>
+		         <td>
+	             	<input name="enterStart" type="text" style="text-align:left;width:130px;" class="input-mini Wdate" maxlength="50" id="enterStart" 
+				     size="16" value="2020-12-08 00:00" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false,readOnly:true})" onchange="changeDate();"/>
+					 -- <input name="enterEnd" maxlength="50" type="text" style="text-align:left;width:130px;" class="input-mini Wdate" 
+					id="enterEnd" size="16" value="2020-12-16 23:59" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false,readOnly:true})" onchange="changeDate();" />
+		         </td>
+		         <th>入库单号：</th>
+		         <td><input id="enterCode" name="enterCode" class="input-large" type="text" value="" maxlength="20"/></td>
+				<th>车船号：</th>
+				<td>
+					<input id="carNo" name="carNo" class="input-large" type="text" value="" maxlength="255"/>
+				</td>
+		     </tr>
+			 <tr>
+				<th>品名：</th>
+				<td>
+					<input name="brandId" type="hidden" id="brandDelay" class="input-medium delay" value=""
+						delayedSrc="/a/sys/sysBrand/getBrandNameJson" delayedMinInput="0"
+						onchange="cleanDelayById('buildMtrTexture')" dataFunc="buildAllBrandDelayParam"/>
+				</td>
+			 	<th>规格：</th>
+				<td>
+					<input name="specificationId" type="hidden" id="specificationId" 
+						class="input-medium delay" delayedSrc="/a/sys/sysSpecification/getSpecificationJson" 
+						delayedMinInput="0"  dataFunc="buildAllSpfDelayParam" value=""/>
+				</td>
+		         <th>仓库：</th>
+			     <td>
+		         	<input id="warehouseId" name="warehouseId" delayedSrc="/a/sys/sysWarehouse/getWarehouseNameJson" class="input-large delay" delayedMinInput="0" dataFunc="buildAllWarehouseParams1" type="text" value="122"/>
+		         </td>
+		         <th>合同号：</th>
+				 <td>
+					<input id="contractCode" name="contractCode" class="input-large" type="text" value="" maxlength="100"/>
+				 </td>
+		         <td>
+	                <input id="btnSubmit" class="btn btn-primary" type="submit" onclick="return page();" value="搜索"/>
+					<input  class="btn" type="button" onclick="resetForm()"  value="清空"/>
+	             </td>	
+			 </tr>
+		</table>
+	</form>
+	<div class="m10 ml0">
+	     
+	     	<input id="btnUpdate" class="btn btn-primary"  type="button"  value="改单" onclick="updateEnter();"/>
+	     	<input id="btnCancel" class="btn btn-primary"  type="button"  value="作废" onclick="cancelEnter();"/>
+	     
+	     
+	     	<input id="btnPrint" class="btn btn-primary" type="button"  value="打印" onclick="doPrint();"/>
+	     
+	     
+	     	<input id="btnPdfExport" class="btn btn-primary" style="width:80px; margin-right:20px;" type="button"  value="PDF导出" onclick="pdfToExport();"/>
+	     
+	</div>
+	<div id="printDivHidden" style="display: none;"></div>
+	<div id="printXmlDivHidden" class="tabDiv " style="display: none;"></div>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">top.$.jBox.closeTip();</script>
+
+	<div style="overflow-x: scroll;">
+		<table id="contentTable" class="table table-striped table-bordered table-condensed">
+			<thead>
+				<tr>
+				  <th><input type="checkbox" onclick="Pn.checkbox('selectionIvtId',this.checked)"></th>
+				  <th>序号</th>
+			      <th>入库单号</th>
+			      <th>入库时间</th>
+			      <th>货主单位</th>
+			      <th style="text-align:right">应收数量</th>
+			      <th style="text-align:right">应收重量</th>
+			      <th style="text-align:right">实收数量</th>
+			      <th style="text-align:right">实收重量</th>
+			      <th>运输方式</th>
+			      <th>车船号</th>
+			      <th>入库方式</th>
+			      <th>业务类型</th>
+			      <th>收货单号</th>
+			      <th>制单员</th>
+			      <th>仓库</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<input id="warehouseIdIp_0" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="0" name='selectionIvtId' value='23225' />
+					</td>
+					<td>1</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23225')">RK20121618283</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655714</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_1" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="1" name='selectionIvtId' value='23217' />
+					</td>
+					<td>2</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23217')">RK20121618275</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655706</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_2" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="2" name='selectionIvtId' value='23207' />
+					</td>
+					<td>3</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23207')">RK20121618265</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655695</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_3" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="3" name='selectionIvtId' value='23229' />
+					</td>
+					<td>4</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23229')">RK20121618287</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655718</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_4" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="4" name='selectionIvtId' value='23221' />
+					</td>
+					<td>5</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23221')">RK20121618279</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655710</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_5" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="5" name='selectionIvtId' value='23213' />
+					</td>
+					<td>6</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23213')">RK20121618271</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655702</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_6" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="6" name='selectionIvtId' value='23344' />
+					</td>
+					<td>7</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23344')">RK20121718302</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121755734</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_7" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="7" name='selectionIvtId' value='23226' />
+					</td>
+					<td>8</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23226')">RK20121618284</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655715</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_8" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="8" name='selectionIvtId' value='23218' />
+					</td>
+					<td>9</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23218')">RK20121618276</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655707</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+				<input id="warehouseIdIp_9" name="warehouseIdIp" type="hidden" value="122"/>
+				<tr>
+					<td class="selectionTd"> 
+						<input type="checkbox" idx="9" name='selectionIvtId' value='23208' />
+					</td>
+					<td>10</td>
+					<td>				
+						<a href="javascript:void(0);" onclick="ladeOpen(this)">
+							<i class="icon_add"><span id="openSpan">+</span></i>
+						</a><a href="javascript:addTabPage('入库单详情','/a/enter/proEnter/detail?id=23208')">RK20121618266</a>
+					</td>
+					<td>2020-12-16 00:01</td>
+					<td>测试公司</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					<td style="text-align:right">2</td>
+					<td style="text-align:right">2.0</td>
+					
+					<td>铁运</td>
+					<td>test_car</td>
+					<td>正常入库</td>
+					<td>现货入库</td>				
+					<td>
+						<a href="javascript:addTabPage('收货单详情','/a/enter/proReceiving/proReceiveDetails?id=')">SH00000001</a>
+					</td>
+					<td>自动化测试</td>
+					<td>测试仓库</td>
+				</tr>
+				<tr style="display: none;">
+					<td colspan="16">
+						<div style="overflow-x: hidden;overflow-y: auto;    max-height: 250px;">
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>序号</th><th>品名 规格 材质 产地</th>
+									<th style="text-align:right">应收数量</th>
+									<th style="text-align:right">应收重量</th>
+									<th style="text-align:right">实收/补差数量</th>
+									<th style="text-align:right">实收/补差重量</th>
+									<!-- <th>支</th> -->
+									<th>货物编号</th>
+									<th>捆包号</th>
+									<th>合同号</th>
+									<th>库位</th>
+									<th>层号</th>
+									<th>车船号</th>
+									<th>资源号</th>
+									<th>计量方式</th>
+									<th>总车数</th>
+									<th>备注</th>
+								</tr>
+								
+									<tr>
+										<td>1</td>
+										<td>
+											
+											螺纹钢 Φ12MM*9 HRB400 安源
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										<td style="text-align:right">
+											2
+											件
+										</td>
+										<td style="text-align:right">
+											2.000
+											吨
+										</td>
+										
+										<td>20121655696</td>
+										<td>自动化测试</td>
+										<td>自动化测试</td>
+										<td>#1</td>
+										<td>自动化测试</td>
+										<td>test_car</td>
+										<td>自动化测试</td>
+										<td>磅计</td>
+										<td></td>
+										<td>自动化测试</td>
+									</tr>
+								
+							</table>
+						</div>
+					</td>
+				</tr>
+			
+			</tbody>
+		</table>
+		<div class="pagination"><ul>
+<li class="disabled"><a href="javascript:">&#171; 上一页</a></li>
+<li class="active"><a href="javascript:">1</a></li>
+<li><a href="javascript:" onclick="page(2,10,'');">2</a></li>
+<li><a href="javascript:" onclick="page(3,10,'');">3</a></li>
+<li><a href="javascript:" onclick="page(4,10,'');">4</a></li>
+<li><a href="javascript:" onclick="page(5,10,'');">5</a></li>
+<li><a href="javascript:" onclick="page(6,10,'');">6</a></li>
+<li><a href="javascript:" onclick="page(7,10,'');">7</a></li>
+<li><a href="javascript:" onclick="page(8,10,'');">8</a></li>
+<li><a href="javascript:" onclick="page(9,10,'');">9</a></li>
+<li><a href="javascript:" onclick="page(2,10,'');">下一页 &#187;</a></li>
+<li class="disabled controls"><a href="javascript:">当前 <input type="text" value="1" onkeypress="var e=window.event||this;var c=e.keyCode||e.which;if(c==13)page(this.value,10,'');" onclick="this.select();"/> / <input type="text" value="10" onkeypress="var e=window.event||this;var c=e.keyCode||e.which;if(c==13)page(1,this.value,'');" onclick="this.select();"/> 条，共 85 条</a></li>
+</ul>
+<label class="setShowTrNumText">每页显示:</label><input class="setShowTrNum" type="text" onfocus="changeShowNum(this)"><label class="setShowTrNumText" style="padding-left:2px;">条</label><input type="button" onclick="changeShowNum(this)" class="btn setShowTrNumBtn" value="修改"><div style="clear:both;"></div></div>
+		
+	</div>
+	</div>
+
+	<script type="text/javascript">//<!-- 无框架时，左上角显示菜单图标按钮。
+		if(!(self.frameElement && self.frameElement.tagName=="IFRAME")){
+			$("body").prepend("<i id=\"btnMenu\" class=\"icon-th-list\" style=\"cursor:pointer;float:right;margin:10px;\"></i><div id=\"menuContent\"></div>");
+			$("#btnMenu").click(function(){
+				top.$.jBox('get:/a/sys/menu/treeselect;JSESSIONID=92189d2586a34a2697ba9bffc58fbb0b', {title:'选择菜单', buttons:{'关闭':true}, width:300, height: 350, top:10});
+				//if ($("#menuContent").html()==""){$.get("/a/sys/menu/treeselect", function(data){$("#menuContent").html(data);});}else{$("#menuContent").toggle(100);}
+			});
+		}//-->
+	</script>
+</body>
+</html>

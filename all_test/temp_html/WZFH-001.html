@@ -1,0 +1,4103 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html style="overflow-x:auto;overflow-y:auto;">
+<head>
+	<title> - Powered ZTDS</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><meta name="author" content="http://jeesite.com/"/>
+<meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10" />
+<meta http-equiv="Expires" content="0"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="Cache-Control" content="no-store">
+<!-- [扩展JS] 
+<script type="text/javascript" src="/static/extJs.js" charset="utf-8"></script>-->
+
+<script src="/static/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<!-- [EasyUI]
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/gray/easyui.css" /> -->
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="/static/easyui/EasyUI/easyui.css" />
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+
+
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/bootstrap.js" type="text/javascript"></script>
+<link href="/static/bootstrap/2.3.1/awesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<!--[if lte IE 7]><link href="/static/bootstrap/2.3.1/awesome/font-awesome-ie7.min.css" type="text/css" rel="stylesheet" /><![endif]-->
+<!--[if lte IE 6]><link href="/static/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<link href="/static/jquery-select2/3.4/select2.css" rel="stylesheet" />
+<script src="/static/jquery-select2/3.4/select2.min.js" type="text/javascript"></script>
+<script src="/static/jquery-select2/3.4/linkage.js" type="text/javascript"></script>
+<link href="/static/jquery-validation/1.11.0/jquery.validate.min.css" type="text/css" rel="stylesheet" />
+<script src="/static/jquery-validation/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/static/jquery-validation/1.11.0/additional-methods.js" type="text/javascript"></script>
+<link href="/static/jquery-jbox/2.3/Skins/Bootstrap/jbox.min.css" rel="stylesheet" />
+<script src="/static/jquery-jbox/2.3/jquery.jBox-2.3.min.js" type="text/javascript"></script>
+<script src="/static/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+<script src="/static/common/mustache.min.js" type="text/javascript"></script>
+<link href="/static/common/zmd.css" type="text/css" rel="stylesheet" />
+<script src="/static/common/zmd.min.js" type="text/javascript"></script>
+<script type="text/javascript">var ctx = '/a', ctxStatic='/static',ctxDownload = '/download',upload_completed=0,
+tabmode = 1;
+</script>
+
+<link href="/static/bootstrap/2.3.1/css_cerulean/fixed_table_rc.css" type="text/css" rel="stylesheet" />
+<script src="/static/bootstrap/2.3.1/js/fixed_table_rc.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/ganged.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/hrefTab.js" type="text/javascript"></script>
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<script src="/static/moduleCommon/setPageNum.js" type="text/javascript"></script>
+<script src="/static/moduleCommon/trHighLight.js" type="text/javascript"></script>
+		
+	
+	<meta name="decorator" content="default"/>
+	<style type="text/css">
+	.fuzzyMatchRdo{height:30px;line-height:30px;}
+	.fuzzyText{display:inline-block;height:30px;line-height:15px;width:20px;text-size:12px;}
+	.fuzzyMatchRdo,.fuzzyText{  vertical-align: middle;}
+	#searchForm .floatItem{float:left;}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		//设置规格精确匹配/模糊匹配
+		var fuzzyMatchRdo = '';
+		if(fuzzyMatchRdo == "1"){
+			$(".fuzzyMatchRdo").attr('checked', true);
+		}
+		switchFuzzy();
+	});
+	function resetForm(){
+		$("#brandDelay").val('');
+		$("#brandDelay").select2('data','');
+		$("#buildMtrTexture").val('');
+		$("#buildMtrTexture").select2('data','');
+		$("#specification").val("");
+		$("#specificationId").val("");
+		$("#specificationId").select2('val','');
+		$("#buildMtrPlacesteel").val('');
+		$("#buildMtrPlacesteel").select2('data','');
+		$("#packageNo").val("");
+		$("#materialNo").val("");
+		$("#modelName").val("");
+		$("#processCode").val("");
+	}
+	
+	function findInventory() {
+		$("#searchForm").submit();
+	}
+	function page(n,s){
+		$("#pageNo").val(n);
+		$("#pageSize").val(s);
+		$("#searchForm").attr("action","/a/send/proSend/toSltInventory");
+		$("#searchForm").submit();
+    	return false;
+    }
+	
+	//规格模糊匹配转换
+	function switchFuzzy(){
+		var fuzzyMatchRdo = $(".fuzzyMatchRdo");
+		if(fuzzyMatchRdo.attr("checked") == "checked"){
+			$("#specificationId").val("");
+			$("#specificationId").select2('val','');
+			$("#specificationIdItem").css("display","none");
+			$("#specification").css("display","block");
+		}else{
+			$("#specificationIdItem").css("display","block");
+			$("#specification").val('');
+			$("#specification").css("display","none");
+		}
+	}
+	
+	//按某字段排序
+	function orderBy(obj,orderField){
+		var item = $(obj);
+		var img = item.find(".orderImg");
+		var orderItem = $("#orderBy").val();
+		if(orderItem == orderField + " ASC"){
+			$("#orderBy").val(orderField + " DESC");
+			img.attr('src',ctxStatic + "/images/order_desc.jpg");
+		}else{
+			$("#orderBy").val(orderField + " ASC");
+			img.attr('src',ctxStatic + "/images/order_asc.jpg");
+		}
+		$("#searchForm").submit();
+	}
+	</script>
+	<!-- <style type="text/css">
+	    html{overflow:hidden;}//隐藏整个页面的滚动条；
+	</style> -->
+	<style type="text/css">
+		.table-striped tbody>tr.editing{    background-color: rgb(170, 201, 255);}
+		.table-striped tbody>tr>td{white-space:nowrap}
+	</style>
+
+</head>
+<body>
+	
+    <div id="myTabContent" class="tab-content" style="overflow-y:hidden;">
+		<div class="tab-pane fade in active m10 " id="owner">
+			<form id="searchForm" class="breadcrumb form-search" action="/a/send/proSend/toSltInventory" method="post">
+				<input id="pageNo" name="pageNo" type="hidden" value=""/>
+				<input id="pageSize" name="pageSize" type="hidden" value=""/>
+				<input id="excludeIds" name="excludeIds" type="hidden" value=""/>
+				<input id="ownerId" name="ownerId" type="hidden" value="3271"/>
+				<input id="warehouseId" name="warehouseId" type="hidden" value="122"/>
+				<input id="sendId" name="sendId" type="hidden" value=""/>
+				<input id="orderBy" name="orderBy" type="hidden" value=""/>
+				
+				<table class="table table-bordered table-condensed">
+			    <tr>
+			    	<th>品名：</th>
+			        <td><input id="brandDelay" name="brandId" delayedSrc="/a/sys/sysBrand/getBrandNameJson" class="input-medium delay" delayedMinInput="0" type="hidden" dataFunc="buildAllBrandDelayParam" onchange="cleanDelayById(&#39;buildMtrTexture&#39;);findInventory();" value=""/></td>
+					<th>材质：</th>
+					<td><input id="buildMtrTexture" name="textureId" delayedSrc="/a/sys/sysTexture/getTextureJson" class="input-medium delay" delayedMinInput="0" type="hidden" dataFunc="buildAllTextureDelayParam" onchange="findInventory();" value=""/></td>
+					<th>规格：</th>
+					<td>
+						<div id="specificationIdItem" class="floatItem">
+					    	<input name="specificationId" id="specificationId" 
+							class="input-medium delay" delayedSrc="/a/sys/sysSpecification/getSpecificationJson" 
+							delayedMinInput="0"  dataFunc="buildAllSpfDelayParam" value="" onchange="findInventory();"/>	
+						</div>	
+				        <div class="floatItem">
+				        	<input id="specification" name="specification" class="input-medium" onchange="findInventory();" type="text" value="" maxlength="255"/>
+				        </div>
+				        <div class="floatItem">
+				       		&nbsp;<input type="checkbox" class="fuzzyMatchRdo" name="fuzzyMatchRdo" value='1' onclick="switchFuzzy();"/><span class="fuzzyText">模<br/>糊</span>
+				        </div>
+				        <div class="clearfix"></div>
+					</td>
+					<th>型号：</th>
+					<td>
+						<input id="modelName" name="modelName" class="input-large" onchange="findInventory();" type="text" value="" maxlength="255"/>
+					</td>
+					<th>加工单号：</th>
+					<td>
+						<input id="processCode" name="processCode" class="input-large" onchange="findInventory();" type="text" value="" maxlength="255"/>
+					</td>
+				</tr>
+				<tr>
+					<th>库位：</th>
+					<td>
+					<input type="hidden" value="" name="warehousePlaceId" class="input-medium delay" delayedSrc="/a/sys/sysWarehousePlace/getPlaceNameJson" delayedMinInput="0" id="buildMtrPlaceId" onchange="findInventory();" dataFunc="buildAllPlaceParams"/>
+					</td>
+					<th>产地</th>
+					<td><input id="buildMtrPlacesteel" name="placesteelId" delayedSrc="/a/sys/placesteel/getPlacesteelJson" class="input-medium delay" delayedMinInput="0" type="hidden" dataFunc="buildAllPlsDelayParam" onchange="findInventory();" value=""/></td>
+					<th>捆包号：</th>
+					<td><input id="packageNo" name="packageNo" style="width:120px;" class="input-large" onchange="findInventory();" type="text" value="" maxlength="255"/></td>
+					<th>合同号/资源号：</th>
+					<td><input id="materialNo" name="materialNo" style="width:120px;" class="input-large" onchange="findInventory();" type="text" value="" maxlength="255"/></td>				
+					<td colspan="2">
+						<input id="btnSubmit" class="btn btn-primary" type="submit" value="搜索"/>
+						<input id="btnReset" class="btn " type="button" value="清空" onclick="resetForm();"/>
+					</td>
+				</tr>
+				</table>
+			</form>
+		<div style="height: 333px;overflow-y: auto;">
+		<table id="contentTable" class="table table-striped table-bordered table-condensed">
+			<thead>
+				<tr>
+				<th><input type="checkbox" onclick="Pn.checkbox('selectionIvtId',this.checked)"></th>
+					<th>序</th>
+					
+			    	<th>品名 规格 材质 产地</th>
+			    	<!-- <th>支</th> -->
+			    	<th style="text-align:right">实物数量</th>
+			    	<th style="text-align:right">实物重量</th>
+			    	<th style="text-align:right">可供数量</th>
+			    	<th style="text-align:right">可供重量</th>
+			    	<th>捆包号</th>
+			    	<th>合同号</th>
+			    	<th>库位</th>
+			    	<th>层号</th>	
+			    	<th>车船号</th>    
+			    	<th>资源号</th>  
+			    	<th>货物编号</th>
+			    	<th>计量方式</th>
+			    	<th>入库时间
+			    		<a href="javascript:void(0);" onclick="orderBy(this,'a.enter_date');">
+				    		
+					    		
+					    		
+					    		
+					    			<img src="/static/images/order.jpg" class = "orderImg"/>
+					    		
+				    		
+			    		</a>
+					</th>
+			    	<th style="text-align:right">过户次数</th>
+			    	<th>边角余料</th>
+			    	<th>库存来源</th>
+			    	<th>原料捆包号</th>
+			    	<th>加工单号</th>
+			    	<th>总车数</th>
+			    	<th>备注</th>
+				</tr>
+			</thead>
+		<tbody>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90614'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90614"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455622"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">1</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455622</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90618'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90618"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455626"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">2</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455626</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90621'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90621"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455629"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">3</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455629</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90624'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90624"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455632"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">4</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455632</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90627'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90627"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455635"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">5</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455635</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90631'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90631"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455639"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">6</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455639</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90635'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90635"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455643"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">7</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455643</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90587'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90587"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455608"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">8</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455608</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90638'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90638"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455646"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">9</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455646</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90603'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90603"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455611"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">10</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455611</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90682'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90682"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121555678"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">11</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121555678</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90606'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90606"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455614"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">12</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455614</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90742'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90742"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655690"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">13</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655690</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90609'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90609"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455617"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">14</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455617</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90745'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90745"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655693"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">15</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655693</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90612'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90612"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455620"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">16</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455620</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90615'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90615"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455623"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">17</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455623</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90619'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90619"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455627"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">18</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455627</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90622'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90622"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455630"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">19</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455630</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90625'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90625"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455633"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">20</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455633</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90628'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90628"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455636"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">21</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455636</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90633'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90633"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455641"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">22</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455641</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90584'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90584"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455605"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">23</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455605</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90636'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90636"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455644"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">24</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455644</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90588'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90588"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455609"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">25</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455609</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90639'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90639"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455647"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">26</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455647</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90604'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90604"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455612"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">27</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455612</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90607'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90607"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455615"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">28</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455615</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90683'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90683"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121555679"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">29</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121555679</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90743'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90743"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655691"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">30</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655691</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90610'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90610"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455618"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">31</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455618</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90613'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90613"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455621"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">32</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455621</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90617'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90617"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455625"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">33</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455625</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90620'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90620"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455628"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">34</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455628</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90623'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90623"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455631"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">35</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455631</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90626'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90626"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455634"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">36</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455634</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90629'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90629"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455637"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">37</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455637</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90634'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90634"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455642"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">38</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455642</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90585'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90585"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455606"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">39</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455606</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90602'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90602"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455610"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">40</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455610</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90637'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90637"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455645"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">41</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455645</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90640'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90640"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455648"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">42</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455648</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90605'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90605"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455613"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">43</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455613</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90687'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90687"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121555683"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">44</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121555683</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90608'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90608"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455616"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">45</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455616</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90744'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90744"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655692"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">46</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655692</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90611'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90611"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121455619"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">47</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121455619</td>
+				<td>磅计</td>
+				<td>2020-12-14 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90747'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90747"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655695"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">48</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655695</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90753'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90753"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655701"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">49</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655701</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90756'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90756"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655704"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">50</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655704</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90759'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90759"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655707"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">51</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655707</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90762'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90762"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655710"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">52</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655710</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90765'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90765"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655713"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">53</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655713</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90768'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90768"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655716"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">54</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655716</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90771'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90771"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655719"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">55</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655719</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90884'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90884"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121755734"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">56</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121755734</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90748'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90748"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655696"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">57</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655696</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90754'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90754"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655702"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">58</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655702</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90757'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90757"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655705"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">59</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655705</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90760'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90760"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655708"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">60</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655708</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90763'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90763"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655711"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">61</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655711</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90766'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90766"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655714"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">62</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655714</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90769'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90769"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655717"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">63</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655717</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90772'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90772"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655720"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">64</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655720</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90923'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90923"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121855739"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">65</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121855739</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90746'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90746"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655694"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">66</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655694</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90749'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90749"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655697"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">67</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655697</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90755'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90755"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655703"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">68</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655703</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90758'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90758"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655706"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">69</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655706</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90761'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90761"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655709"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">70</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655709</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90764'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90764"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655712"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">71</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655712</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90767'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90767"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655715"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">72</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655715</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90770'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90770"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121655718"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">73</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121655718</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90882'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90882"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121755732"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">74</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121755732</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+			<tr idx="" class="dataTr">
+			<td class="selectionTd"> 
+					<input type="checkbox" name='selectionIvtId' value='90924'/>
+				</td>
+				<td>
+				<input type="hidden" name="" class="inventoryIdIh" value="90924"/>
+				<input type="hidden" name="" class="brandIdIh" value="2"/>
+				<input type="hidden" name="" class="textureIdIh" value="2"/>
+				<input type="hidden" name="" class="specificationIdIh" value="2"/>
+				<input type="hidden" name="" class="placesteelIdIh" value="2"/>
+				<input type="hidden" name="" class="materialDescIh" value="螺纹钢 Φ12MM*9 HRB400 安源"/>
+				<input type="hidden" name="" class="warehousePlaceIdIh" value="1"/>
+				<input type="hidden" name="" class="countWeightModeIh" value="02"/>
+				<input type="hidden" class="averageWeightIh" />
+				<input type="hidden" name="" class="sendNumUnitIh" value="01"/>
+				<input type="hidden" name="" class="sendWeightUnitIh" value="01"/>
+				<input type="hidden" name="" class="materialNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="materialCodeIh" value="20121855740"/>
+				<input type="hidden" name="" class="carNoIh" value="test_car"/>
+				<input type="hidden" name="" class="packageNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="contractCodeIh" value="自动化测试"/>
+				<input type="hidden" name="" class="storeyNoIh" value="自动化测试"/>
+				<input type="hidden" name="" class="carNumIh" value=""/>
+				<input type="hidden" name="" class="remarksIh" value="自动化测试"/>
+				<label class="idxTd">75</label>
+				</td>
+				
+				<td>螺纹钢 Φ12MM*9 HRB400 安源</td>
+				
+				<td class="invNumTd">2</td>
+				<td class="invWeightTd">2.0</td>
+				<td class="supplyNumTd">2</td>
+				<td class="supplyWeightTd">2.0</td>
+				<td>自动化测试</td>
+				<td>自动化测试</td>
+				<td>#1</td>
+				<td>自动化测试</td>
+				<td>test_car</td>
+				<td>自动化测试</td>
+				<td>20121855740</td>
+				<td>磅计</td>
+				<td>2020-12-16 00:01</td>
+				<td class="transferCntTd" style="text-align:right"></td> 
+				<td class="isOddmentTd">否</td>
+				<td class="stockSourceTd">现货入库</td>
+				<td class="rawPackageNoTd"></td>
+				<td class="processCodeTd"></td>
+				<td></td>
+				<td>自动化测试</td>
+			</tr>
+		
+		
+		</tbody>
+	</table>
+	<div class="pagination"><ul>
+<li class="disabled"><a href="javascript:">&#171; 上一页</a></li>
+<li class="active"><a href="javascript:">1</a></li>
+<li class="disabled"><a href="javascript:">下一页 &#187;</a></li>
+<li class="disabled controls"><a href="javascript:">当前 <input type="text" value="1" onkeypress="var e=window.event||this;var c=e.keyCode||e.which;if(c==13)page(this.value,100,'');" onclick="this.select();"/> / <input type="text" value="100" onkeypress="var e=window.event||this;var c=e.keyCode||e.which;if(c==13)page(1,this.value,'');" onclick="this.select();"/> 条，共 75 条</a></li>
+</ul>
+<label class="setShowTrNumText">每页显示:</label><input class="setShowTrNum" type="text" onfocus="changeShowNum(this)"><label class="setShowTrNumText" style="padding-left:2px;">条</label><input type="button" onclick="changeShowNum(this)" class="btn setShowTrNumBtn" value="修改"><div style="clear:both;"></div></div>
+	</div>
+</div>
+</div>
+
+	<script type="text/javascript">//<!-- 无框架时，左上角显示菜单图标按钮。
+		if(!(self.frameElement && self.frameElement.tagName=="IFRAME")){
+			$("body").prepend("<i id=\"btnMenu\" class=\"icon-th-list\" style=\"cursor:pointer;float:right;margin:10px;\"></i><div id=\"menuContent\"></div>");
+			$("#btnMenu").click(function(){
+				top.$.jBox('get:/a/sys/menu/treeselect;JSESSIONID=92189d2586a34a2697ba9bffc58fbb0b', {title:'选择菜单', buttons:{'关闭':true}, width:300, height: 350, top:10});
+				//if ($("#menuContent").html()==""){$.get("/a/sys/menu/treeselect", function(data){$("#menuContent").html(data);});}else{$("#menuContent").toggle(100);}
+			});
+		}//-->
+	</script>
+</body>
+</html>
